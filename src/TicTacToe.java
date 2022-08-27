@@ -34,11 +34,7 @@ public class TicTacToe {
             }
             boardPrinter(board);
         }
-        
-        // print board after both turns have been played
-        // boardPrinter(board);
-        // scanner.close();
-
+        scanner.close();
     }
 
     // prints the board in terminal
@@ -58,10 +54,10 @@ public class TicTacToe {
             System.out.println("Where would you like to place X? (1-9)");
             userInput = scanner.nextLine(); 
             // check if spot is available
-            if(availabilityChecker(board, Integer.parseInt(userInput))) {
+            if(availabilityChecker(board, userInput)) {
                 break;
             } else {
-                System.out.println("Invalid input " + userInput + " is already taken");
+                System.out.println("Invalid input");
             }
         }
         // userInput and player turn X placement
@@ -73,7 +69,7 @@ public class TicTacToe {
         // computer will keep picking a spot until it picks a valid one
         while(true) {
             randomNum = (int) (Math.random() * 9) + 1; 
-            if(availabilityChecker(board, randomNum)){
+            if(availabilityChecker(board, Integer.toString(randomNum))){
                 break; 
             }
         }
@@ -83,25 +79,25 @@ public class TicTacToe {
     }
 
     // check's whether the spot has been taken or not
-    private static boolean availabilityChecker(char[][] board, int position) {
+    private static boolean availabilityChecker(char[][] board, String position) {
         switch(position) {
-            case 1:
+            case "1":
                 return (board[0][0] == ' '); 
-            case 2:
+            case "2":
                 return (board[0][1] == ' '); 
-            case 3:
+            case "3":
                 return (board[0][2] == ' '); 
-            case 4:
+            case "4":
                 return (board[1][0] == ' '); 
-            case 5:
+            case "5":
                 return (board[1][1] == ' '); 
-            case 6:
+            case "6":
                 return (board[1][2] == ' '); 
-            case 7:
+            case "7":
                 return (board[2][0] == ' ');  
-            case 8:
+            case "8":
                 return (board[2][1] == ' '); 
-            case 9:
+            case "9":
                 return (board[2][2] == ' '); 
             default: 
                 return false; 
@@ -145,14 +141,20 @@ public class TicTacToe {
     }
 
     private static boolean isGameOver(char[][] board) {
-        // check if someone has won 
-        if ((board[0][0] == board[0][1] && board[0][1] == board[0][2]) ||
-           (board[0][0] == board[1][0] && board[0][0] == board[2][0])) {
-                System.out.println("Someone has won!");
-                return true; 
-        
+
+        // check if we have a winner (player)
+        if(hasPlayerWon(board, 'X')) {
+            boardPrinter(board);
+            System.out.println("Player has won!");
+            return true; 
         }
 
+        // check if we have a winner (Computer)
+        if(hasPlayerWon(board, 'O')) {
+            boardPrinter(board);
+            System.out.println("Computer has won!");
+            return true; 
+        }
 
         // check if the board is full
         for(int i = 0; i < board.length; i++) {
@@ -165,5 +167,27 @@ public class TicTacToe {
         boardPrinter(board);
         System.out.println("Tie! No more spots available");
         return true; 
+    }
+
+    private static boolean hasPlayerWon(char[][] board, char symbol) {
+        // check if someone has won 
+        // top horizontal
+        if ((board[0][0] == symbol && board[0][1] == symbol && board[0][2] == symbol) ||
+        // bottom horizontal
+            (board[2][0] == symbol && board[2][1] == symbol && board[2][2] == symbol) ||
+        // left vertical
+            (board[0][0] == symbol && board[1][0] == symbol && board[2][0] == symbol) ||
+        // right vertical 
+            (board[0][2] == symbol && board[1][2] == symbol && board[2][2] == symbol) ||
+        // diagonals
+            (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) ||
+            (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) ||
+        // vertical middle
+            (board[0][1] == symbol && board[1][1] == symbol && board[2][1] == symbol) ||
+        // horizontal middle 
+            (board[1][0] == symbol && board[1][1] == symbol && board[1][2] == symbol)) {
+                return true; 
+        }
+        return false; 
     }
 }
